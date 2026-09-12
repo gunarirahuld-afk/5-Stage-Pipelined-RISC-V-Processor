@@ -1,0 +1,151 @@
+$date
+	Sun Sep 13 00:03:05 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_mem_wb $end
+$var wire 1 ! reg_write_out $end
+$var wire 32 " read_data_out [31:0] $end
+$var wire 5 # rd_out [4:0] $end
+$var wire 1 $ mem_to_reg_out $end
+$var wire 32 % alu_result_out [31:0] $end
+$var reg 32 & alu_result_in [31:0] $end
+$var reg 1 ' clk $end
+$var reg 1 ( mem_to_reg_in $end
+$var reg 5 ) rd_in [4:0] $end
+$var reg 32 * read_data_in [31:0] $end
+$var reg 1 + reg_write_in $end
+$var reg 1 , rst $end
+$scope module uut $end
+$var wire 32 - alu_result_in [31:0] $end
+$var wire 1 ' clk $end
+$var wire 1 ( mem_to_reg_in $end
+$var wire 5 . rd_in [4:0] $end
+$var wire 32 / read_data_in [31:0] $end
+$var wire 1 + reg_write_in $end
+$var wire 1 , rst $end
+$var reg 32 0 alu_result_out [31:0] $end
+$var reg 1 $ mem_to_reg_out $end
+$var reg 5 1 rd_out [4:0] $end
+$var reg 32 2 read_data_out [31:0] $end
+$var reg 1 ! reg_write_out $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+bx 2
+bx 1
+bx 0
+b0 /
+b0 .
+b0 -
+1,
+0+
+b0 *
+b0 )
+0(
+0'
+b0 &
+bx %
+x$
+bx #
+bx "
+x!
+$end
+#5000
+0$
+0!
+b0 #
+b0 1
+b0 %
+b0 0
+b0 "
+b0 2
+1'
+#10000
+0'
+1(
+1+
+b101 )
+b101 .
+b110010 &
+b110010 -
+b1100100 *
+b1100100 /
+0,
+#15000
+1$
+1!
+b101 #
+b101 1
+b110010 %
+b110010 0
+b1100100 "
+b1100100 2
+1'
+#20000
+0'
+0(
+b1010 )
+b1010 .
+b1001011 &
+b1001011 -
+b11001000 *
+b11001000 /
+#25000
+0$
+b1010 #
+b1010 1
+b1001011 %
+b1001011 0
+b11001000 "
+b11001000 2
+1'
+#30000
+0'
+1(
+b1111 )
+b1111 .
+b1111101 &
+b1111101 -
+b100101100 *
+b100101100 /
+#35000
+1$
+b1111 #
+b1111 1
+b1111101 %
+b1111101 0
+b100101100 "
+b100101100 2
+1'
+#40000
+0'
+0(
+0+
+b0 )
+b0 .
+b110010000 &
+b110010000 -
+b0 *
+b0 /
+#45000
+0$
+0!
+b0 #
+b0 1
+b110010000 %
+b110010000 0
+b0 "
+b0 2
+1'
+#50000
+0'

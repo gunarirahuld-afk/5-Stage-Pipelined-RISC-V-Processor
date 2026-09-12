@@ -1,0 +1,293 @@
+$date
+	Sat Sep 12 23:42:15 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_id_ex $end
+$var wire 5 ! rs2_out [4:0] $end
+$var wire 5 " rs1_out [4:0] $end
+$var wire 1 # reg_write_out $end
+$var wire 32 $ read_data2_out [31:0] $end
+$var wire 32 % read_data1_out [31:0] $end
+$var wire 5 & rd_out [4:0] $end
+$var wire 32 ' pc_out [31:0] $end
+$var wire 1 ( mem_write_out $end
+$var wire 1 ) mem_to_reg_out $end
+$var wire 1 * mem_read_out $end
+$var wire 32 + immediate_out [31:0] $end
+$var wire 1 , branch_out $end
+$var wire 1 - alu_src_out $end
+$var wire 4 . alu_control_out [3:0] $end
+$var reg 4 / alu_control_in [3:0] $end
+$var reg 1 0 alu_src_in $end
+$var reg 1 1 branch_in $end
+$var reg 1 2 clk $end
+$var reg 32 3 immediate_in [31:0] $end
+$var reg 1 4 mem_read_in $end
+$var reg 1 5 mem_to_reg_in $end
+$var reg 1 6 mem_write_in $end
+$var reg 32 7 pc_in [31:0] $end
+$var reg 5 8 rd_in [4:0] $end
+$var reg 32 9 read_data1_in [31:0] $end
+$var reg 32 : read_data2_in [31:0] $end
+$var reg 1 ; reg_write_in $end
+$var reg 5 < rs1_in [4:0] $end
+$var reg 5 = rs2_in [4:0] $end
+$var reg 1 > rst $end
+$scope module uut $end
+$var wire 4 ? alu_control_in [3:0] $end
+$var wire 1 0 alu_src_in $end
+$var wire 1 1 branch_in $end
+$var wire 1 2 clk $end
+$var wire 32 @ immediate_in [31:0] $end
+$var wire 1 4 mem_read_in $end
+$var wire 1 5 mem_to_reg_in $end
+$var wire 1 6 mem_write_in $end
+$var wire 32 A pc_in [31:0] $end
+$var wire 5 B rd_in [4:0] $end
+$var wire 32 C read_data1_in [31:0] $end
+$var wire 32 D read_data2_in [31:0] $end
+$var wire 1 ; reg_write_in $end
+$var wire 5 E rs1_in [4:0] $end
+$var wire 5 F rs2_in [4:0] $end
+$var wire 1 > rst $end
+$var reg 4 G alu_control_out [3:0] $end
+$var reg 1 - alu_src_out $end
+$var reg 1 , branch_out $end
+$var reg 32 H immediate_out [31:0] $end
+$var reg 1 * mem_read_out $end
+$var reg 1 ) mem_to_reg_out $end
+$var reg 1 ( mem_write_out $end
+$var reg 32 I pc_out [31:0] $end
+$var reg 5 J rd_out [4:0] $end
+$var reg 32 K read_data1_out [31:0] $end
+$var reg 32 L read_data2_out [31:0] $end
+$var reg 1 # reg_write_out $end
+$var reg 5 M rs1_out [4:0] $end
+$var reg 5 N rs2_out [4:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+bx N
+bx M
+bx L
+bx K
+bx J
+bx I
+bx H
+bx G
+b0 F
+b0 E
+b0 D
+b0 C
+b0 B
+b0 A
+b0 @
+b0 ?
+1>
+b0 =
+b0 <
+0;
+b0 :
+b0 9
+b0 8
+b0 7
+06
+05
+04
+b0 3
+02
+01
+00
+b0 /
+bx .
+x-
+x,
+bx +
+x*
+x)
+x(
+bx '
+bx &
+bx %
+bx $
+x#
+bx "
+bx !
+$end
+#5000
+b0 .
+b0 G
+0,
+0)
+0(
+0*
+0-
+0#
+b0 &
+b0 J
+b0 !
+b0 N
+b0 "
+b0 M
+b0 +
+b0 H
+b0 $
+b0 L
+b0 %
+b0 K
+b0 '
+b0 I
+12
+#10000
+02
+1;
+b11 8
+b11 B
+b10 =
+b10 F
+b1 <
+b1 E
+b101 3
+b101 @
+b10100 :
+b10100 D
+b1010 9
+b1010 C
+0>
+#15000
+1#
+b11 &
+b11 J
+b10 !
+b10 N
+b1 "
+b1 M
+b101 +
+b101 H
+b10100 $
+b10100 L
+b1010 %
+b1010 K
+12
+#20000
+02
+10
+b101 8
+b101 B
+b100 =
+b100 F
+b11 <
+b11 E
+b1000 3
+b1000 @
+b101000 :
+b101000 D
+b11110 9
+b11110 C
+b100 7
+b100 A
+#25000
+1-
+b101 &
+b101 J
+b100 !
+b100 N
+b11 "
+b11 M
+b1000 +
+b1000 H
+b101000 $
+b101000 L
+b11110 %
+b11110 K
+b100 '
+b100 I
+12
+#30000
+02
+15
+14
+0;
+b111 8
+b111 B
+b110 =
+b110 F
+b101 <
+b101 E
+b1100 3
+b1100 @
+b111100 :
+b111100 D
+b110010 9
+b110010 C
+b1000 7
+b1000 A
+#35000
+1)
+1*
+0#
+b111 &
+b111 J
+b110 !
+b110 N
+b101 "
+b101 M
+b1100 +
+b1100 H
+b111100 $
+b111100 L
+b110010 %
+b110010 K
+b1000 '
+b1000 I
+12
+#40000
+02
+05
+16
+04
+b1001 8
+b1001 B
+b1000 =
+b1000 F
+b111 <
+b111 E
+b10000 3
+b10000 @
+b1010000 :
+b1010000 D
+b1000110 9
+b1000110 C
+b1100 7
+b1100 A
+#45000
+0)
+1(
+0*
+b1001 &
+b1001 J
+b1000 !
+b1000 N
+b111 "
+b111 M
+b10000 +
+b10000 H
+b1010000 $
+b1010000 L
+b1000110 %
+b1000110 K
+b1100 '
+b1100 I
+12
+#50000
+02
