@@ -122,6 +122,7 @@ instruction_memory u_instruction_memory (
 if_id u_if_id (
     .clk(clk),
     .rst(rst),
+    .write_enable(if_id_write),
     .pc_in(pc),
     .pc_plus4_in(pc_plus4),
     .instruction_in(instruction),
@@ -129,7 +130,6 @@ if_id u_if_id (
     .pc_plus4_out(if_id_pc_plus4),
     .instruction_out(if_id_instruction)
 );
-
 register_file u_register_file (
     .clk(clk),
     .rst(rst),

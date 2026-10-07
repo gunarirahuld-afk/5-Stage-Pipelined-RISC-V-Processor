@@ -14,16 +14,44 @@ reg [31:0] registers [0:31];
 integer i;
 
 always @(posedge clk) begin
+
     if (rst) begin
+
         for (i = 0; i < 32; i = i + 1)
             registers[i] <= 32'b0;
+
     end
+
     else if (reg_write && (rd != 5'b00000)) begin
+
         registers[rd] <= write_data;
+
     end
+
 end
 
-assign read_data1 = (rs1 == 5'b00000) ? 32'b0 : registers[rs1];
-assign read_data2 = (rs2 == 5'b00000) ? 32'b0 : registers[rs2];
+// -------------------------------------------------
+// Register read with write-through bypass
+// -------------------------------------------------
+//
+// If a register is being written in the WB stage
+// and the same register is being read in the ID stage,
+// return the new write_data immediately instead of
+// the old stored value.
+//
+// This prevents a same-cycle WB -> ID data hazard.
+// -------------------------------------------------
+
+assign read_data1 =
+    (rs1 == 5'b00000) ? 32'b0 :
+    (reg_write && (rd != 5'b00000) && (rd == rs1)) ?
+        write_data :
+        registers[rs1];
+
+assign read_data2 =
+    (rs2 == 5'b00000) ? 32'b0 :
+    (reg_write && (rd != 5'b00000) && (rd == rs2)) ?
+        write_data :
+        registers[rs2];
 
 endmodule
