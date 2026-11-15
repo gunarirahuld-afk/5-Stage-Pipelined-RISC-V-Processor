@@ -1,141 +1,77 @@
-# 5-Stage Pipelined RISC-V Processor with Memory and SPI Interface
+# 5-Stage Pipelined RISC-V Processor (Verilog)
 
-## Overview
+A 5-stage pipelined RISC-V CPU in Verilog HDL, with data forwarding and hazard detection, verified in simulation and synthesized with Yosys.
 
-This project implements a 5-stage pipelined RISC-V processor using Verilog HDL. The design includes instruction and data memory, pipeline registers, forwarding logic, and hazard detection logic. The RTL was simulated using Icarus Verilog, analyzed using GTKWave, and synthesized using Yosys.
+![Verilog](https://img.shields.io/badge/Verilog-HDL-blue) ![RISC-V](https://img.shields.io/badge/RISC--V-RV32-green) ![Yosys](https://img.shields.io/badge/Yosys-0%20problems-orange) ![Sim](https://img.shields.io/badge/Simulation-PASS-brightgreen)
 
-## Features
+## Highlights
 
-* 5-stage processor pipeline: Instruction Fetch (IF), Instruction Decode (ID), Execute (EX), Memory Access (MEM), and Write Back (WB)
-* Instruction and data memory modules
-* Arithmetic Logic Unit (ALU)
-* Register file and immediate generator
-* Control unit
-* Pipeline registers between stages
-* Forwarding unit
-* Hazard detection unit
-* RTL simulation and waveform analysis
-* Yosys synthesis and RTL schematic generation
+- Classic IF → ID → EX → MEM → WB pipeline with IF/ID, ID/EX, EX/MEM and MEM/WB pipeline registers
+- **Forwarding unit** resolves RAW data hazards without stalling where possible
+- **Hazard detection unit** inserts stalls for load-use hazards
+- Separate instruction and data memory, register file, ALU, immediate generator and control unit
+- Self-checking testbench (`RISC-V SIMULATION: PASS`), GTKWave waveforms, Yosys netlist and RTL schematic
 
 ## Architecture
 
-The processor is organized into five pipeline stages:
+| Stage | What it does |
+|---|---|
+| IF | Fetches the instruction and computes the next PC |
+| ID | Decodes, generates control signals, reads registers, builds the immediate |
+| EX | ALU operation; forwarded operands selected here |
+| MEM | Data-memory load/store |
+| WB | Writes the result back to the register file |
 
-1. **Instruction Fetch (IF):** Fetches instructions and calculates the next program counter.
-2. **Instruction Decode (ID):** Decodes instructions, generates control signals, and reads register operands.
-3. **Execute (EX):** Performs ALU operations and evaluates execution results.
-4. **Memory Access (MEM):** Handles data-memory operations.
-5. **Write Back (WB):** Writes results back to the register file.
+![RTL schematic](riscv_schematic.png)
 
-## Project Structure
+## Repository layout
 
-```text
-5-Stage-Pipelined-RISC-V-Processor/
-├── alu.v
-├── control_unit.v
-├── data_memory.v
-├── ex_mem.v
-├── forwarding_unit.v
-├── hazard_detection.v
-├── id_ex.v
-├── if_id.v
-├── immediate_generator.v
-├── instruction_memory.v
-├── mem_wb.v
-├── register_file.v
-├── riscv_5stage.v
-├── tb_riscv_5stage.v
-├── riscv.vcd
-├── riscv_synth.v
-├── riscv_schematic.png
-└── README.md
-```
+| File | Module |
+|---|---|
+| `riscv_5stage.v` | Top level |
+| `if_id.v`, `id_ex.v`, `ex_mem.v`, `mem_wb.v` | Pipeline registers |
+| `alu.v`, `control_unit.v`, `register_file.v`, `immediate_generator.v` | Datapath and control |
+| `forwarding_unit.v`, `hazard_detection.v` | Hazard handling |
+| `instruction_memory.v`, `data_memory.v` | Memories |
+| `tb_riscv_5stage.v` | Testbench |
+| `riscv_synth.v`, `riscv_schematic.png`, `riscv.vcd` | Synthesis netlist, schematic, waveform |
 
-## Tools Used
+## Run it
 
-* **Verilog HDL** — RTL design
-* **Icarus Verilog** — RTL compilation and simulation
-* **GTKWave** — Waveform analysis
-* **Yosys** — RTL synthesis and design checking
-* **Graphviz** — Schematic image generation
-
-## Simulation
-
-Compile the design and testbench from the project directory:
+Requires Icarus Verilog, GTKWave and Yosys.
 
 ```bash
-iverilog -g2012 -o riscv_sim alu.v control_unit.v data_memory.v ex_mem.v forwarding_unit.v hazard_detection.v id_ex.v if_id.v immediate_generator.v instruction_memory.v mem_wb.v register_file.v riscv_5stage.v tb_riscv_5stage.v
-```
+# Simulate
+iverilog -g2012 -o riscv_sim alu.v control_unit.v data_memory.v ex_mem.v forwarding_unit.v \
+  hazard_detection.v id_ex.v if_id.v immediate_generator.v instruction_memory.v \
+  mem_wb.v register_file.v riscv_5stage.v tb_riscv_5stage.v
+vvp riscv_sim            # prints: RISC-V SIMULATION: PASS
 
-Run the simulation:
-
-```bash
-vvp riscv_sim
-```
-
-Expected completion message:
-
-```text
-RISC-V SIMULATION: PASS
-```
-
-The simulation generates `riscv.vcd` for waveform inspection.
-
-## Waveform Analysis
-
-Open the generated waveform using GTKWave:
-
-```bash
+# View waveforms
 gtkwave riscv.vcd
 ```
 
-Use the waveform to inspect the program counter, instruction, pipeline signals, register data, memory controls, and write-back signals.
-
-## Synthesis
-
-The RTL was synthesized and checked using Yosys.
-
-Load the design files:
-
 ```text
+# Synthesize (inside yosys)
 read_verilog alu.v control_unit.v data_memory.v ex_mem.v forwarding_unit.v hazard_detection.v id_ex.v if_id.v immediate_generator.v instruction_memory.v mem_wb.v register_file.v riscv_5stage.v
-```
-
-Prepare the top-level design:
-
-```text
 prep -top riscv_5stage
-```
-
-The completed Yosys design check reported:
-
-```text
-Found and reported 0 problems.
-```
-
-Generate the synthesized Verilog netlist:
-
-```text
+check                    # Found and reported 0 problems
 write_verilog -noattr riscv_synth.v
-```
-
-Generate the RTL schematic:
-
-```text
 show -format dot -prefix riscv_schematic
 ```
 
 ## Results
 
-* RTL simulation completed and displayed the testbench PASS message.
-* GTKWave waveform generated for simulation analysis.
-* Yosys synthesis and design checking completed with zero reported problems.
-* Synthesized Verilog netlist and schematic generated.
+- Testbench passes; pipeline, register and memory signals inspected in GTKWave
+- Yosys synthesis completes with 0 reported problems; gate-level netlist and schematic generated
 
-**Note:** A successful Yosys design check confirms that no problems were reported by that check; it does not by itself prove that every processor instruction or hazard scenario is functionally correct.
+## Next steps
+
+- Branch prediction and pipeline flush on taken branches
+- Wider instruction coverage against the RV32I compliance tests
+- Take the core through OpenLane/LibreLane on SKY130
 
 ## Author
 
-**Rahul D G**
-Electronics and Communication Engineering
-
+**Rahul Dayanand Gunari**, B.E. Electronics & Communication, Sri Venkateshwara College of Engineering, Bengaluru
+[LinkedIn](https://www.linkedin.com/in/rahul-gunari-b31350312/) · gunarirahuld@gmail.com
