@@ -42,6 +42,13 @@ wire id_ex_mem_write;
 wire id_ex_mem_to_reg;
 wire id_ex_branch;
 wire [3:0] id_ex_alu_control;
+wire [2:0] id_ex_funct3;
+
+// Branch resolution in EX (2-cycle taken-branch penalty)
+reg branch_cond;
+wire branch_taken;
+wire [31:0] branch_target;
+wire id_ex_kill;
 
 wire [1:0] forward_a;
 wire [1:0] forward_b;
@@ -103,15 +110,32 @@ always @(*) begin
     endcase
 end
 
+// beq/bne/blt/bge/bltu/bgeu compare the forwarded operands
+always @(*) begin
+    case (id_ex_funct3)
+        3'b000: branch_cond = (alu_input_a == alu_input_b_reg);
+        3'b001: branch_cond = (alu_input_a != alu_input_b_reg);
+        3'b100: branch_cond = ($signed(alu_input_a) <  $signed(alu_input_b_reg));
+        3'b101: branch_cond = ($signed(alu_input_a) >= $signed(alu_input_b_reg));
+        3'b110: branch_cond = (alu_input_a <  alu_input_b_reg);
+        3'b111: branch_cond = (alu_input_a >= alu_input_b_reg);
+        default: branch_cond = 1'b0;
+    endcase
+end
+
+assign branch_taken  = id_ex_branch && branch_cond;
+assign branch_target = id_ex_pc + id_ex_immediate;
+
+// A taken branch squashes the two younger instructions (in IF/ID and ID)
+assign id_ex_kill = control_stall || branch_taken;
+
 always @(posedge clk) begin
     if (rst)
         pc <= 32'b0;
-    else if (pc_write) begin
-        if (ex_mem_branch && ex_mem_zero)
-            pc <= ex_mem_branch_target;
-        else
-            pc <= pc_plus4;
-    end
+    else if (branch_taken)
+        pc <= branch_target;
+    else if (pc_write)
+        pc <= pc_plus4;
 end
 
 instruction_memory u_instruction_memory (
@@ -123,6 +147,7 @@ if_id u_if_id (
     .clk(clk),
     .rst(rst),
     .write_enable(if_id_write),
+    .flush(branch_taken),
     .pc_in(pc),
     .pc_plus4_in(pc_plus4),
     .instruction_in(instruction),
@@ -180,13 +205,14 @@ id_ex u_id_ex (
     .rs1_in(id_rs1),
     .rs2_in(id_rs2),
     .rd_in(id_rd),
-    .reg_write_in(control_stall ? 1'b0 : reg_write),
-    .alu_src_in(control_stall ? 1'b0 : alu_src),
-    .mem_read_in(control_stall ? 1'b0 : mem_read),
-    .mem_write_in(control_stall ? 1'b0 : mem_write),
-    .mem_to_reg_in(control_stall ? 1'b0 : mem_to_reg),
-    .branch_in(control_stall ? 1'b0 : branch),
-    .alu_control_in(control_stall ? 4'b0000 : alu_control),
+    .reg_write_in(id_ex_kill ? 1'b0 : reg_write),
+    .alu_src_in(id_ex_kill ? 1'b0 : alu_src),
+    .mem_read_in(id_ex_kill ? 1'b0 : mem_read),
+    .mem_write_in(id_ex_kill ? 1'b0 : mem_write),
+    .mem_to_reg_in(id_ex_kill ? 1'b0 : mem_to_reg),
+    .branch_in(id_ex_kill ? 1'b0 : branch),
+    .alu_control_in(id_ex_kill ? 4'b0000 : alu_control),
+    .funct3_in(if_id_instruction[14:12]),
     .pc_out(id_ex_pc),
     .read_data1_out(id_ex_read_data1),
     .read_data2_out(id_ex_read_data2),
@@ -200,7 +226,8 @@ id_ex u_id_ex (
     .mem_write_out(id_ex_mem_write),
     .mem_to_reg_out(id_ex_mem_to_reg),
     .branch_out(id_ex_branch),
-    .alu_control_out(id_ex_alu_control)
+    .alu_control_out(id_ex_alu_control),
+    .funct3_out(id_ex_funct3)
 );
 
 forwarding_unit u_forwarding_unit (
@@ -227,7 +254,7 @@ ex_mem u_ex_mem (
     .rst(rst),
     .alu_result_in(alu_result),
     .write_data_in(alu_input_b_reg),
-    .branch_target_in(id_ex_pc + id_ex_immediate),
+    .branch_target_in(branch_target),
     .zero_in(alu_zero),
     .rd_in(id_ex_rd),
     .reg_write_in(id_ex_reg_write),
@@ -271,4 +298,4 @@ mem_wb u_mem_wb (
     .mem_to_reg_out(mem_wb_mem_to_reg)
 );
 
-endmodule
+endmodule

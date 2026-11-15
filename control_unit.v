@@ -34,8 +34,9 @@ always @(*) begin
                 3'b110: alu_control = 4'b0011;
                 3'b100: alu_control = 4'b0100;
                 3'b001: alu_control = 4'b0101;
-                3'b101: alu_control = 4'b0110;
+                3'b101: alu_control = (funct7 == 7'b0100000) ? 4'b1000 : 4'b0110;
                 3'b010: alu_control = 4'b0111;
+                3'b011: alu_control = 4'b1001;
                 default: alu_control = 4'b0000;
             endcase
         end
@@ -49,8 +50,9 @@ always @(*) begin
                 3'b110: alu_control = 4'b0011;
                 3'b100: alu_control = 4'b0100;
                 3'b001: alu_control = 4'b0101;
-                3'b101: alu_control = 4'b0110;
+                3'b101: alu_control = (funct7 == 7'b0100000) ? 4'b1000 : 4'b0110;
                 3'b010: alu_control = 4'b0111;
+                3'b011: alu_control = 4'b1001;
                 default: alu_control = 4'b0000;
             endcase
         end
@@ -86,4 +88,4 @@ always @(*) begin
     endcase
 end
 
-endmodule
+endmodule

@@ -15,6 +15,8 @@ wire [31:0] instruction_out;
 if_id uut (
     .clk(clk),
     .rst(rst),
+    .write_enable(1'b1),
+    .flush(1'b0),
     .pc_in(pc_in),
     .pc_plus4_in(pc_plus4_in),
     .instruction_in(instruction_in),

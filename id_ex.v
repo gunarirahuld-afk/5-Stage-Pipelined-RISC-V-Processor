@@ -15,6 +15,7 @@ module id_ex (
     input wire mem_to_reg_in,
     input wire branch_in,
     input wire [3:0] alu_control_in,
+    input wire [2:0] funct3_in,
     output reg [31:0] pc_out,
     output reg [31:0] read_data1_out,
     output reg [31:0] read_data2_out,
@@ -28,7 +29,8 @@ module id_ex (
     output reg mem_write_out,
     output reg mem_to_reg_out,
     output reg branch_out,
-    output reg [3:0] alu_control_out
+    output reg [3:0] alu_control_out,
+    output reg [2:0] funct3_out
 );
 
 always @(posedge clk) begin
@@ -47,6 +49,7 @@ always @(posedge clk) begin
         mem_to_reg_out <= 1'b0;
         branch_out <= 1'b0;
         alu_control_out <= 4'b0;
+        funct3_out <= 3'b0;
     end
     else begin
         pc_out <= pc_in;
@@ -63,7 +66,8 @@ always @(posedge clk) begin
         mem_to_reg_out <= mem_to_reg_in;
         branch_out <= branch_in;
         alu_control_out <= alu_control_in;
+        funct3_out <= funct3_in;
     end
 end
 
-endmodule
+endmodule

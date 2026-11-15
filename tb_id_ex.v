@@ -64,6 +64,7 @@ id_ex uut (
     .mem_write_out(mem_write_out),
     .mem_to_reg_out(mem_to_reg_out),
     .branch_out(branch_out),
+    .funct3_in(3'b000),
     .alu_control_out(alu_control_out)
 );
 

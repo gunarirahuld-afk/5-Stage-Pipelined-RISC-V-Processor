@@ -2,6 +2,7 @@ module if_id (
     input wire clk,
     input wire rst,
     input wire write_enable,
+    input wire flush,
 
     input wire [31:0] pc_in,
     input wire [31:0] pc_plus4_in,
@@ -14,7 +15,7 @@ module if_id (
 
 always @(posedge clk) begin
 
-    if (rst) begin
+    if (rst || flush) begin
         pc_out <= 32'b0;
         pc_plus4_out <= 32'b0;
         instruction_out <= 32'b0;
@@ -28,4 +29,4 @@ always @(posedge clk) begin
 
 end
 
-endmodule
+endmodule
