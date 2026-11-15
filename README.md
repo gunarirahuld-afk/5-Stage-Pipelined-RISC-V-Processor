@@ -10,7 +10,11 @@ A 5-stage pipelined RISC-V CPU in Verilog HDL, with data forwarding and hazard d
 - **Forwarding unit** resolves RAW data hazards without stalling where possible
 - **Hazard detection unit** inserts stalls for load-use hazards
 - Separate instruction and data memory, register file, ALU, immediate generator and control unit
-- Self-checking testbench (`RISC-V SIMULATION: PASS`), GTKWave waveforms, Yosys netlist and RTL schematic
+- Self-checking testbench with a load-use hazard test and CPI/stall/forwarding counters, GTKWave waveforms, Yosys RTL schematic
+
+## Supported instructions
+
+RV32I subset: R-type `add sub and or xor sll srl slt`, I-type `addi andi ori xori slli srli slti`, `lw`, `sw`, and `beq`. Not yet implemented: `bne/blt/bge` (decoded as `beq`), `sra/srai`, `sltu/sltiu`, `jal/jalr`, `lui/auipc`, byte/half-word loads and stores.
 
 ## Architecture
 
@@ -34,7 +38,8 @@ A 5-stage pipelined RISC-V CPU in Verilog HDL, with data forwarding and hazard d
 | `forwarding_unit.v`, `hazard_detection.v` | Hazard handling |
 | `instruction_memory.v`, `data_memory.v` | Memories |
 | `tb_riscv_5stage.v` | Testbench |
-| `riscv_synth.v`, `riscv_schematic.png`, `riscv.vcd` | Synthesis netlist, schematic, waveform |
+| `tb_*.v` | Unit testbenches for each module |
+| `riscv_schematic.png`, `riscv_waveform.png`, `RICSwave.gtkw` | Schematic, waveform screenshot, GTKWave save file |
 
 ## Run it
 
@@ -45,10 +50,10 @@ Requires Icarus Verilog, GTKWave and Yosys.
 iverilog -g2012 -o riscv_sim alu.v control_unit.v data_memory.v ex_mem.v forwarding_unit.v \
   hazard_detection.v id_ex.v if_id.v immediate_generator.v instruction_memory.v \
   mem_wb.v register_file.v riscv_5stage.v tb_riscv_5stage.v
-vvp riscv_sim            # prints: RISC-V SIMULATION: PASS
+vvp riscv_sim            # prints: ALL PIPELINE TESTS PASSED
 
 # View waveforms
-gtkwave riscv.vcd
+gtkwave riscv_5stage.vcd
 ```
 
 ```text
@@ -67,7 +72,8 @@ show -format dot -prefix riscv_schematic
 
 ## Next steps
 
-- Branch prediction and pipeline flush on taken branches
+- Flush IF/ID and ID/EX on a taken branch (today the two wrong-path instructions after a taken `beq` still execute)
+- Remaining RV32I instructions and branch prediction
 - Wider instruction coverage against the RV32I compliance tests
 - Take the core through OpenLane/LibreLane on SKY130
 
